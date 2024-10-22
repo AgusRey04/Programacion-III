@@ -1,44 +1,77 @@
 ﻿using Application.Interfaces;
-using Application.Services;
+using Application.Models;
+using Application.Models.Requests;
 using Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace web.Controllers
+namespace WebApi.Controllers
 {
-
-    [Route("api/[controller]")]
     [ApiController]
-    public class AdministradorController : Controller
+    [Route("api/[controller]")]
+    public class AdministradorController : ControllerBase
     {
         private readonly IAdministradorService _administradorService;
         private readonly IProfesorService _profesorService;
-        private readonly IUsuarioService _suarioService;
-        public AdministradorController(IAdministradorService administradorService, IProfesorService profesorService, IUsuarioService suarioService)
+
+        public AdministradorController(IAdministradorService administradorService, IProfesorService profesorService)
         {
             _administradorService = administradorService;
             _profesorService = profesorService;
-            _suarioService = suarioService;
         }
 
 
-        [HttpGet("Get-Administradores")]
-        public IActionResult Get()
+        // Alta de Administrador
+        [HttpPost]
+        public ActionResult<DtoAdministrador> AddAdministrador(ResponseCrearPersona adminRequest)
         {
-            return Ok(_administradorService.GetAll());
+            _administradorService.AddAdministrador(adminRequest);
+            return Ok();
         }
 
-        [HttpGet("Get-Profesores")]
-        public IActionResult GetProfesor()
+        // Consulta de todos los Administradores
+        [HttpGet]
+        public ActionResult<IEnumerable<DtoAdministrador>> GetAllAdministradores()
         {
-            return Ok(_profesorService.GetProfesores()); 
+            return Ok(_administradorService.GetAllAdministradores());
         }
 
-        [HttpGet("Get-Usuiarios")]
-        public ActionResult<List<Usuario>> GetUsuario() // con IActionResult no se utiliza el <List<Usuario>>
+        // Consulta por Id
+        [HttpGet("{id}")]
+        public ActionResult<DtoAdministrador> GetAdministradorById(int id)
         {
-            return _suarioService.GetAll().ToList();
+            var admin = _administradorService.GetAdministradorById(id);
+            if (admin == null) return NotFound();
+            return Ok(admin);
         }
 
+        // Modificación de Administrador
+        [HttpPut("{id}")]
+        public ActionResult UpdateAdministrador(int id, Administrador adminData)
+        {
+            if (id != adminData.Id) return BadRequest();
+            _administradorService.UpdateAdministrador(adminData);
+
+            return NoContent();
+        }
+
+        // Baja de Administrador
+        [HttpDelete("{id}")]
+        public ActionResult DeleteAdministrador(int id)
+        {
+            _administradorService.DeleteAdministrador(id);
+            return NoContent();
+        }
+
+        // Alta de Profesor por Administrador
+        [HttpPost("profesor")]
+        public ActionResult<DtoProfesor> AddProfesor(ResponseCrearPersona profesor)
+        {
+            if (_profesorService.EmailExists(profesor.Email))
+            {
+                return BadRequest("El usuario ya está registrado");
+            }
+            _profesorService.Add(profesor);
+            return Ok();
+        }
     }
 }

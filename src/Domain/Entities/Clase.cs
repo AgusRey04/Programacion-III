@@ -18,6 +18,17 @@ namespace Domain.Entities
         public string Nombre { get; set; }
         public Profesor ProfesorClase { get; set; }
         public TimeSpan Horario { get; set; }
-        public List<string> DiasSemana { get; set; }
+        public List<DiaDeLaSemana> DiasSemana { get; set; }
+       
+        public enum DiaDeLaSemana
+        {
+            Lunes,
+            Martes,
+            Miércoles,
+            Jueves,
+            Viernes,
+            Sábado,
+            Domingo
+        }
     }
 }

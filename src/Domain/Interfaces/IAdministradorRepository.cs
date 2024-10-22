@@ -9,6 +9,10 @@ namespace Domain.Interfaces
 {
     public interface IAdministradorRepository
     {
-        public List<Administrador> GetAdministradores();
+        void AddAdministrador(Administrador administrador);
+        IEnumerable<Administrador> GetAdministradores();
+        Administrador GetAdministradorById(int id);
+        void UpdateAdministrador(Administrador administrador);
+        void DeleteAdministrador(int id);
     }
 }
