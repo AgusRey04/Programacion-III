@@ -7,8 +7,13 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IProfesorRepository
+   public interface IProfesorRepository
     {
-        public List<Profesor> GetAll();
+        public void AddProfesor(Profesor profesor);
+        public IEnumerable<Profesor> GetProfesors();
+        public Profesor GetProfesorById(int id);
+        public void UpdateProfesor(Profesor profesor);
+        public void DeleteProfesor(int id);
+        public bool EmailExists(string email);
     }
 }

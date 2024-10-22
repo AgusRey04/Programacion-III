@@ -1,17 +1,17 @@
-﻿using Domain.Entities;
-using System;
+﻿using Application.Models;
+using Application.Models.Requests;
+using Domain.Entities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
     public interface IUsuarioService
     {
-        public void Add(Usuario usuario);
-        public List<Usuario> GetAll();
-        public void Update(Usuario usuario);
-        public Usuario GetById(int Id);
+        void Add(ResponseCrearPersona usuario);
+        IEnumerable<DtoUsuario> GetAll();
+        DtoUsuario GetById(int id);
+        void Update(Usuario usuario);
+        void Delete(int id);
+        public bool EmailExists(string email);
     }
 }

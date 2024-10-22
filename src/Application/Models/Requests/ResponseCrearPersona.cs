@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities
+namespace Application.Models.Requests
 {
-    public abstract class Persona
+    public class ResponseCrearPersona
     {
+
         [Required]
         public string? Nombre { get; set; }
         [Required]
@@ -16,10 +17,8 @@ namespace Domain.Entities
         [Required]
         [EmailAddress(ErrorMessage = "invalid Email Address")]
         public string? Email { get; set; }
-
-        public bool Activo { get; set; }
         [Required]
         public string? Password { get; set; }
-        public ICollection<Clase> Clases { get; set; }
     }
 }
+

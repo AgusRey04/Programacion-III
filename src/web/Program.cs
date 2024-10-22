@@ -1,20 +1,18 @@
 using Application.Interfaces;
 using Application.Services;
 using Domain.Interfaces;
-using Infrastructure;
+using Infrastructure.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configuración de conexión a la base de datos SQLite
 var connection = new SqliteConnection("Data source=DB-Ejemplo.db");
 connection.Open();
 using (var command = connection.CreateCommand())
@@ -26,15 +24,14 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseSqlite(connection, b => b.MigrationsAssembly("Infrastructure"))
 );
 
+// Registrando los servicios como Scoped
+builder.Services.AddScoped<IClaseService, ClaseService>();
+builder.Services.AddScoped<IClaseRepository, ClaseRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IProfesorService, ProfesorService>();
+builder.Services.AddScoped<IProfesorRepository, ProfesorRepository>();
 
-builder.Services.AddSingleton<IProfesorRepository, ProfesorRepository>();
-builder.Services.AddSingleton<IProfesorService, ProfesorService>();
-builder.Services.AddSingleton<IUsuarioService,UsuarioService>();
-builder.Services.AddSingleton<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddSingleton<IAdministradorRepository, AdministradorRepository>();
-builder.Services.AddSingleton<IAdministradorService, AdministradorService>();
-builder.Services.AddSingleton<IClaseService, ClaseService>();
-builder.Services.AddSingleton<IClasesRepository,ClaseRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,9 +42,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

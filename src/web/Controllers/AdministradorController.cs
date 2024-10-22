@@ -1,44 +1,31 @@
 ﻿using Application.Interfaces;
-using Application.Services;
-using Domain.Entities;
-using Microsoft.AspNetCore.Http;
+using Application.Models;
+using Application.Models.Requests;
 using Microsoft.AspNetCore.Mvc;
 
-namespace web.Controllers
+namespace WebApi.Controllers
 {
-
-    [Route("api/[controller]")]
     [ApiController]
-    public class AdministradorController : Controller
+    [Route("api/[controller]")]
+    public class AdministradorController : ControllerBase
     {
-        private readonly IAdministradorService _administradorService;
         private readonly IProfesorService _profesorService;
-        private readonly IUsuarioService _suarioService;
-        public AdministradorController(IAdministradorService administradorService, IProfesorService profesorService, IUsuarioService suarioService)
+
+        public AdministradorController(IProfesorService profesorService)
         {
-            _administradorService = administradorService;
             _profesorService = profesorService;
-            _suarioService = suarioService;
         }
 
-
-        [HttpGet("Get-Administradores")]
-        public IActionResult Get()
+       
+        [HttpPost("profesor")]
+        public ActionResult<DtoProfesor> AddProfesor(ResponseCrearPersona profesor)
         {
-            return Ok(_administradorService.GetAll());
+            if (_profesorService.EmailExists(profesor.Email))
+            {
+                return BadRequest("El usuario ya está registrado");
+            }
+            _profesorService.Add(profesor);
+            return Ok();
         }
-
-        [HttpGet("Get-Profesores")]
-        public IActionResult GetProfesor()
-        {
-            return Ok(_profesorService.GetProfesores()); 
-        }
-
-        [HttpGet("Get-Usuiarios")]
-        public ActionResult<List<Usuario>> GetUsuario() // con IActionResult no se utiliza el <List<Usuario>>
-        {
-            return _suarioService.GetAll().ToList();
-        }
-
     }
 }

@@ -16,6 +16,5 @@ namespace Domain.Entities
         public ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
         public ICollection<Profesor> Profesores { get; set; } = new List<Profesor>();
         public ICollection<Clase> Clases { get; set; } = new List<Clase>();
-
     }
 }

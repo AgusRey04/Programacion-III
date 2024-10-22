@@ -13,5 +13,6 @@ namespace Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+        public ICollection<Clase> Clases { get; set; }
     }
 }

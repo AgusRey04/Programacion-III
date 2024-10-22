@@ -1,24 +1,57 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Interfaces;
+using Application.Models;
+using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Application.Interfaces;
-using Application.Services;
+
 namespace web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClaseController : Controller
+    public class ClaseController : ControllerBase
     {
-       private readonly IClaseService _claseService;
+        private readonly IClaseService _claseService;
 
-       public ClaseController(IClaseService claseService)
+        public ClaseController(IClaseService claseService)
         {
             _claseService = claseService;
         }
 
-        [HttpGet]
-        public IActionResult GetClases()
+        [HttpPost]
+        public ActionResult Post(Clase clase)
         {
-            return Ok(_claseService.GetAll()); // Agregué el paréntesis de cierre
+            _claseService.Add(clase);
+            return Ok();
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<DtoClase>> GetAll()
+        {
+            return Ok(_claseService.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<DtoClase> GetById(int id)
+        {
+            var clase = _claseService.GetById(id);
+            if (clase == null) return NotFound();
+            return Ok(clase);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, Clase clase)
+        {
+            if (id != clase.Id) return BadRequest();
+
+            _claseService.Update(clase);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            _claseService.Delete(id);
+            return NoContent();
         }
     }
 }

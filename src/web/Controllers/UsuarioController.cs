@@ -1,52 +1,64 @@
 ﻿using Application.Interfaces;
+using Application.Models;
+using Application.Models.Requests;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace web.Controllers
+namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
-
 
         public UsuarioController(IUsuarioService usuarioService)
         {
             _usuarioService = usuarioService;
         }
 
-        [HttpGet("Get-Usuiarios")]
-        public ActionResult<List<Usuario>> Get() // IActionResult no se utiliza el <List<Usuario>>
-        {
-            return Ok(_usuarioService.GetAll().ToList());
-        }
-
         [HttpPost]
-        public IActionResult Add(Usuario usuario)
+        public ActionResult<DtoUsuario> Post(ResponseCrearPersona usuario)
         {
-
+            if (_usuarioService.EmailExists(usuario.Email))
+            {
+                return BadRequest("El usuario ya esta registrado");
+            }
             _usuarioService.Add(usuario);
-            return NoContent();
-
+            return Ok();
         }
-        [HttpPut]
-        public IActionResult Update(Usuario usuario)
+
+        [HttpGet]
+        public ActionResult<IEnumerable<DtoUsuario>> GetAll()
         {
+
+       
+            return Ok(_usuarioService.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<DtoUsuario> GetById(int id)
+        {
+            var usuario = _usuarioService.GetById(id);
+            if (usuario == null) return NotFound();
+            return Ok(usuario);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, Usuario usuario)
+        {
+            if (id != usuario.Id) return BadRequest();
+
             _usuarioService.Update(usuario);
             return NoContent();
         }
 
-        [HttpGet("GetById-Usuiarios")]
-        public IActionResult GetById(int id)
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
         {
-            return Ok(_usuarioService.GetById(id));
+            _usuarioService.Delete(id);
+            return NoContent();
         }
-
-
-
-
     }
 }
