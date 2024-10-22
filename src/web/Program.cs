@@ -2,6 +2,8 @@ using Application.Interfaces;
 using Application.Services;
 using Domain.Interfaces;
 using Infrastructure;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +11,21 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connection = new SqliteConnection("Data source=DB-Ejemplo.db");
+connection.Open();
+using (var command = connection.CreateCommand())
+{
+    command.CommandText = "PRAGMA journal_mode = DELETE;";
+    command.ExecuteNonQuery();
+}
+builder.Services.AddDbContext<ApplicationContext>(options =>
+    options.UseSqlite(connection, b => b.MigrationsAssembly("Infrastructure"))
+);
+
 
 builder.Services.AddSingleton<IProfesorRepository, ProfesorRepository>();
 builder.Services.AddSingleton<IProfesorService, ProfesorService>();
