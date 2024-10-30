@@ -2,24 +2,33 @@
 using Application.Models;
 using Domain.Entities;
 using Domain.Interfaces;
+using Application.Models.Requests;
+using Application.Models;
+using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 
+
 namespace web.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
     public class ProfesorController : ControllerBase
     {
+
+
         private readonly IProfesorService _profesorService;
 
         public ProfesorController(IProfesorService profesorService)
         {
             _profesorService = profesorService;
         }
-     
+
 
         [HttpGet]
+
         public ActionResult<IEnumerable<DtoProfesor>> GetAll()
         {
 
@@ -50,6 +59,10 @@ namespace web.Controllers
             _profesorService.Delete(id);
             return NoContent();
         }
+
+
+
+
 
     }
 }

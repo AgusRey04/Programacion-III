@@ -7,7 +7,7 @@ namespace Infrastructure.Data
     {
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Profesor> Profesors { get; set; }
-        public DbSet<Clase> Clases { get; set; } 
+        public DbSet<Clase> Clases { get; set; }
         public DbSet<Administrador> Administradores { get; set; }
 
 
@@ -21,12 +21,12 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Usuario>()
                 .HasMany(u => u.Clases)
                 .WithMany(c => c.UsuariosInscriptos)
-                .UsingEntity(j => j.ToTable("UsuarioClase")); 
+                .UsingEntity(j => j.ToTable("UsuarioClase"));
 
             modelBuilder.Entity<Clase>()
-                .HasOne(c => c.ProfesorClase )
+                .HasOne(c => c.ProfesorClase)
                 .WithMany()
-                .HasForeignKey("ProfesorId"); 
+                .HasForeignKey("ProfesorId");
         }
     }
 }

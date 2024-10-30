@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Services;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuración de conexión a la base de datos SQLite
+// Configuraciï¿½n de conexiï¿½n a la base de datos SQLite
+// Configuraciï¿½n de conexiï¿½n a la base de datos SQLite
 var connection = new SqliteConnection("Data source=DB-Ejemplo.db");
 connection.Open();
 using (var command = connection.CreateCommand())

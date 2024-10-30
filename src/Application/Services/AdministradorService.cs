@@ -49,7 +49,7 @@ namespace Application.Services
             return DtoAdministrador.Create(admin);
         }
 
-        public void UpdateAdministrador( Administrador adminData)
+        public void UpdateAdministrador(Administrador adminData)
         {
             _administradorRepository.UpdateAdministrador(adminData);
 
